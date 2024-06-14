@@ -19,16 +19,22 @@ function App() {
     socket.on("receive_message", (data) => {
       setMessageReceived([...messageReceived, data.message]);
     });
-    socket.on('sentImg', (src) => {
+
+    const handleImage = (src) =>{
       // Create Img...
       var img = document.createElement('img')
       img.src = src
       img.width = 200
       img.height = 200
       document.querySelector('div').append(img)
-    })
+    }
+    socket.on('sentImg',handleImage)
+    return () =>{
+      socket.off('sentImg',handleImage)
+    }
   });
   const sendImage = async (e) => { // make this thing accept multiple inputs and send out multiple inputs
+    console.log(e.target.files)
     if (e.target.files.length <= 0) return;
     for (const file of e.target.files) {
       const reader = new FileReader();
