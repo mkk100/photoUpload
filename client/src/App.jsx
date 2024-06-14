@@ -22,12 +22,7 @@ function App() {
     socket.on('sentImg', (src) => {
       // Create Img...
       var img = document.createElement('img')
-      console.log(src)
-      img.src = (window.URL || window.webkitURL).createObjectURL(
-        new Blob([src], {
-          type: 'image/png'
-        })
-      )
+      img.src = src
       img.width = 200
       img.height = 200
       document.querySelector('div').append(img)
@@ -40,7 +35,7 @@ function App() {
       reader.onload = (e) => {
         socket.emit("submitImg", e.target.result);
       };
-      reader.readAsArrayBuffer(file);
+      reader.readAsDataURL(file);
     }
   };
 
