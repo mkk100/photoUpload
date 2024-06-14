@@ -1,59 +1,69 @@
 import "./App.css";
-import React, { useState } from "react";
+import { useState } from "react";
+import { useEffect } from "react";
 import io from "socket.io-client";
+import { useRef } from "react";
 const socket = io.connect("http://localhost:3001");
 
 function App() {
-  const [selectedImages, setSelectedImages] = useState([]);
-
-  // Function to handle file selection
-  const handleFileChange = (event) => {
-    const newImages = Array.from(event.target.files); // Convert FileList to array
-    setSelectedImages((prevImages) => [...prevImages, ...newImages]); // Update state with new and previous selections
+  const [message, setMessage] = useState("");
+  const input = document.getElementById("inp");
+  const [fileSelected, setFileSelected] = useState([]);
+  const [messageReceived, setMessageReceived] = useState([]);
+  const [imageReceived, setImageReceived] = useState([]);
+  const sendMessage = async () => {
+    await socket.emit("send_message", { message: input.value });
+    setMessageReceived([...messageReceived, input.value]);
   };
-
-  // Function to handle sending selected images
-  const sendImages = () => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      // Send each image data to the server (replace with your server-side logic)
-      socket.emit("send_images", e.target.result); // Send image data as base64 string (adjust based on server implementation)
-    };
-
-    // Loop through selected images and read them one by one
-    selectedImages.forEach((image) => {
-      reader.readAsDataURL(image);
+  useEffect(() => {
+    socket.on("receive_message", (data) => {
+      setMessageReceived([...messageReceived, data.message]);
     });
+    socket.on('sentImg', (src) => {
+      // Create Img...
+      var img = document.createElement('img')
+      console.log(src)
+      img.src = (window.URL || window.webkitURL).createObjectURL(
+        new Blob([src], {
+          type: 'image/png'
+        })
+      )
+      img.width = 200
+      img.height = 200
+      document.querySelector('div').append(img)
+    })
+  });
+  const sendImage = async (e) => { // make this thing accept multiple inputs and send out multiple inputs
+    if (e.target.files.length <= 0) return;
+    for (const file of e.target.files) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        socket.emit("submitImg", e.target.result);
+      };
+      reader.readAsArrayBuffer(file);
+    }
   };
 
   return (
     <div className="outershell">
-      <h1>PhotoUpload (Multiple)</h1>
-      {selectedImages.length > 0 && (
-        <div>
-          {/* Display selected images */}
-          {selectedImages.map((image) => (
-            <img
-              key={image.name} // Add a unique key for each image
-              alt="not found"
-              width={"250px"}
-              src={URL.createObjectURL(image)}
-            />
-          ))}
-          <br /> <br />
-          {/* Button to remove all selected images */}
-          <button onClick={() => setSelectedImages([])}>Remove All</button>
-        </div>
-      )}
-
-      <br />
       <input
-        type="file"
-        multiple
-        name="myImages" // Change name to plural
-        onChange={handleFileChange}
+        type="text"
+        placeholder="Message"
+        id="inp"
+        onChange={(event) => {
+          setMessage(event.target.value);
+        }}
       />
-      <button onClick={sendImages}>Upload Images</button>
+      <input type="file" multiple id="img" onChange= {sendImage} /> Upload
+        <div>
+          {messageReceived && (
+            <div>
+              {messageReceived.map((message) => {
+                return <h1>{message}</h1>;
+              })}
+            </div>
+          )}
+        </div>
     </div>
   );
 }
