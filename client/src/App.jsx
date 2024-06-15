@@ -2,41 +2,55 @@ import "./App.css";
 import { useState } from "react";
 import { useEffect } from "react";
 import io from "socket.io-client";
-import { useRef } from "react";
+import { v4 as uuidv4 } from "uuid";
+
 const socket = io.connect("http://localhost:3001");
 
 function App() {
   const [message, setMessage] = useState("");
-  const input = document.getElementById("inp");
-  const [fileSelected, setFileSelected] = useState([]);
   const [messageReceived, setMessageReceived] = useState([]);
-  const [imageReceived, setImageReceived] = useState([]);
+  const [images, setImages] = useState([]);
+  const [del, setDel] = useState(false);
   const sendMessage = async () => {
-    await socket.emit("send_message", { message: input.value });
-    setMessageReceived([...messageReceived, input.value]);
+    await socket.emit("send_message", { message });
+    setMessageReceived([...messageReceived, message]);
   };
+
   useEffect(() => {
     socket.on("receive_message", (data) => {
       setMessageReceived([...messageReceived, data.message]);
     });
 
-    const handleImage = (src) =>{
-      // Create Img...
-      var img = document.createElement('img')
-      img.src = src
-      img.width = 200
-      img.height = 200
-      document.querySelector('div').append(img)
+    const handleImage = async (src) => {
+      const newImage = { src, id: uuidv4() }; // Create new image object with ID
+      setImages((images) => [...images, newImage]); // Update state with new image data
+    };
+    socket.on("sentImg", handleImage);
+    socket.on("updated", (data) => {
+      setImages([]);
+      setImages([data]);
+    });
+    return () => {
+      socket.off("sentImg", handleImage);
+    };
+  }, []); // Empty dependency array to run useEffect only once
+  useEffect(() => {
+    if (del) {
+      socket.emit("del_image", images);
     }
-    socket.on('sentImg',handleImage)
-    return () =>{
-      socket.off('sentImg',handleImage)
-    }
-  });
-  const sendImage = async (e) => { // make this thing accept multiple inputs and send out multiple inputs
-    console.log(e.target.files)
-    if (e.target.files.length <= 0) return;
-    for (const file of e.target.files) {
+  }, [del]);
+  const deleteImage = (id) => {
+    const filteredImages = images.filter((image) => image.id !== id);
+    setImages(filteredImages);
+    setDel(true)
+  };
+
+
+  const sendImage = async (e) => {
+    const files = e.target.files;
+    if (!files.length) return;
+
+    for (const file of files) {
       const reader = new FileReader();
       reader.onload = (e) => {
         socket.emit("submitImg", e.target.result);
@@ -47,24 +61,28 @@ function App() {
 
   return (
     <div className="outershell">
-      <input
-        type="text"
-        placeholder="Message"
-        id="inp"
-        onChange={(event) => {
-          setMessage(event.target.value);
-        }}
-      />
-      <input type="file" multiple id="img" onChange= {sendImage} /> Upload
-        <div>
-          {messageReceived && (
-            <div>
-              {messageReceived.map((message) => {
-                return <h1>{message}</h1>;
-              })}
-            </div>
-          )}
-        </div>
+      <input id="files" type="file" onChange={sendImage} multiple />
+      <div>
+        {/* Display received messages */}
+        {messageReceived && (
+          <div>
+            {messageReceived.map((message) => (
+              <h1>{message}</h1>
+            ))}
+          </div>
+        )}
+        {/* Image Gallery with Delete Buttons */}
+        {images.length > 0 && (
+          <div className="image-gallery">
+            {images.map((image) => (
+              <div key={image.id}>
+                <img src={image.src} alt="Received Image" id={image.id} />
+                <button onClick={() => deleteImage(image.id)}>Delete</button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
