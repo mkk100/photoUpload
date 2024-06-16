@@ -1,25 +1,66 @@
-.outershell{
+/* General Styles */
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.outershell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Input Styles */
+#files {
+  margin-bottom: 20px;
+}
+
+/* Messages Styles */
+.messages {
+  margin-bottom: 20px;
+}
+
+h1 {
+  margin-bottom: 5px;
+}
+
+/* Image Gallery Styles */
+.image-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.image-gallery div {
+  margin: 10px;
   text-align: center;
+  position: relative; /* Required for button positioning */
 }
 
-input[type="file"]::file-selector-button {
-  border-radius: 4px;
-  padding: 0 16px;
-  height: 40px;
+.images {
+  width: 200px;
+  height: 200px;
+  object-fit: cover; /* Resize image to fit container while maintaining aspect ratio */
+}
+
+button {
+  margin-top: 10px; /* Adjust for elevation */
+  padding: 0; /* Remove default padding for better positioning */
+  width: 30px; /* Set button width */
+  height: 30px; /* Set button height */
+  border: none;
+  border-radius: 50%; /* Create a circular button */
   cursor: pointer;
-  background-color: white;
-  border: 1px solid rgba(0, 0, 0, 0.16);
-  box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.05);
-  margin-right: 16px;
-  transition: background-color 200ms;
+  background-color: red; /* Set red background color */
+  color: white; /* Set text color to white for better contrast */
+  position: absolute; /* Position button within image container */
+  top: -8px; /* Elevate button (adjust as needed) */
+  right: 0px; /* Adjust horizontal positioning as needed */
 }
 
-/* file upload button hover state */
-input[type="file"]::file-selector-button:hover {
-  background-color: #f3f4f6;
-}
-
-/* file upload button active state */
-input[type="file"]::file-selector-button:active {
-  background-color: #e5e7eb;
+button:hover {
+  background-color: #900; /* Darken the red color on hover */
 }

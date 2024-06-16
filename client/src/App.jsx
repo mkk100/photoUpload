@@ -15,7 +15,6 @@ function App() {
     await socket.emit("send_message", { message });
     setMessageReceived([...messageReceived, message]);
   };
-
   useEffect(() => {
     socket.on("receive_message", (data) => {
       setMessageReceived([...messageReceived, data.message]);
@@ -25,10 +24,12 @@ function App() {
       const newImage = { src, id: uuidv4() }; // Create new image object with ID
       setImages((images) => [...images, newImage]); // Update state with new image data
     };
+
     socket.on("sentImg", handleImage);
-    socket.on("updated", (data) => {
+    socket.on("updated", async (data) => {
       setImages([]);
-      setImages([data]);
+      setImages([...data]);
+      setDel(false);
     });
     return () => {
       socket.off("sentImg", handleImage);
@@ -42,9 +43,8 @@ function App() {
   const deleteImage = (id) => {
     const filteredImages = images.filter((image) => image.id !== id);
     setImages(filteredImages);
-    setDel(true)
+    setDel(true);
   };
-
 
   const sendImage = async (e) => {
     const files = e.target.files;
@@ -76,8 +76,28 @@ function App() {
           <div className="image-gallery">
             {images.map((image) => (
               <div key={image.id}>
-                <img src={image.src} alt="Received Image" id={image.id} />
-                <button onClick={() => deleteImage(image.id)}>Delete</button>
+                <img
+                  src={image.src}
+                  alt="Received Image"
+                  id={image.id}
+                  class="images"
+                />
+                <button onClick={() => deleteImage(image.id)}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18 18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
               </div>
             ))}
           </div>
