@@ -4,6 +4,19 @@ body {
   margin: 0;
   padding: 0;
 }
+#files {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer;
+  background-image: linear-gradient(to right, #f0f0f0 0%, #e0e0e0 50%, #f0f0f0 100%); /* Subtle gradient */
+  color: #333; /* Text color */
+  font-weight: bold; /* Bold text */
+}
+
+#files:hover {
+  background-image: linear-gradient(to right, #e0e0e0 0%, #d0d0d0 50%, #e0e0e0 100%); /* Change gradient on hover */
+}
 
 .outershell {
   display: flex;

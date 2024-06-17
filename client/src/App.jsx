@@ -10,6 +10,7 @@ function App() {
   const [message, setMessage] = useState("");
   const [messageReceived, setMessageReceived] = useState([]);
   const [images, setImages] = useState([]);
+  const [user, setUser] = useState("");
   const [del, setDel] = useState(false);
   const sendMessage = async () => {
     await socket.emit("send_message", { message });
@@ -31,6 +32,9 @@ function App() {
       setImages([...data]);
       setDel(false);
     });
+    socket.on("username", (data) => {
+      setUser(data);
+    });
     return () => {
       socket.off("sentImg", handleImage);
     };
@@ -45,7 +49,9 @@ function App() {
     setImages(filteredImages);
     setDel(true);
   };
-
+  const setuser = () => {
+    socket.emit("sendUser", document.getElementById("user").value);
+  };
   const sendImage = async (e) => {
     const files = e.target.files;
     if (!files.length) return;
@@ -58,22 +64,39 @@ function App() {
       reader.readAsDataURL(file);
     }
   };
+  const downloadAllImages = async () => {
+    for (const image of images) {
+      const { src, id } = image; // Destructure src and id (if available)
+      const filename = id
+        ? `${id}.${src.split(".").pop()}`
+        : `image_${images.indexOf(image) + 1}.${src.split(".").pop()}`; // Generate unique filenames
+
+      await downloadImage(src, filename);
+    }
+  };
+
+  const downloadImage = async (src, filename) => {
+    const response = await fetch(src);
+    const blob = await response.blob();
+
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+  };
 
   return (
     <div className="outershell">
+      <input id="user" type="text" placeholder="username" />
+      <button id="button" onClick={() => setuser()}>
+        Submit
+      </button>
       <input id="files" type="file" onChange={sendImage} multiple />
       <div>
-        {/* Display received messages */}
-        {messageReceived && (
-          <div>
-            {messageReceived.map((message) => (
-              <h1>{message}</h1>
-            ))}
-          </div>
-        )}
         {/* Image Gallery with Delete Buttons */}
-        {images.length > 0 && (
-          <div className="image-gallery">
+        {images.length > 0 && user && (
+          <div className="image-gallery" id={user === images[-1]}>
+            <div>{user}</div>
             {images.map((image) => (
               <div key={image.id}>
                 <img
@@ -103,6 +126,7 @@ function App() {
           </div>
         )}
       </div>
+      <a onClick={downloadAllImages}>Download</a>
     </div>
   );
 }
