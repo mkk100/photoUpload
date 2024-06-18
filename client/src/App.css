@@ -56,10 +56,11 @@ h1 {
 .images {
   width: 200px;
   height: 200px;
+  border: solid;
   object-fit: cover; /* Resize image to fit container while maintaining aspect ratio */
 }
 
-button {
+.button {
   margin-top: 10px; /* Adjust for elevation */
   padding: 0; /* Remove default padding for better positioning */
   width: 30px; /* Set button width */
@@ -74,6 +75,21 @@ button {
   right: 0px; /* Adjust horizontal positioning as needed */
 }
 
-button:hover {
+.button:hover {
   background-color: #900; /* Darken the red color on hover */
+}
+
+.download {
+  background-color:  #43a047; /* Red */
+  color: #fff; /* White for text contrast */
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: none;
+  display: inline-block;
+}
+.download:hover {
+  background-color:  #43a047; /* Darker red on hover */
 }
