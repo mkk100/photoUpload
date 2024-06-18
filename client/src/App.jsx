@@ -5,22 +5,11 @@ import io from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
 
 const socket = io.connect("http://localhost:3001");
-
 function App() {
-  const [message, setMessage] = useState("");
-  const [messageReceived, setMessageReceived] = useState([]);
   const [images, setImages] = useState([]);
   const [user, setUser] = useState("");
   const [del, setDel] = useState(false);
-  const sendMessage = async () => {
-    await socket.emit("send_message", { message });
-    setMessageReceived([...messageReceived, message]);
-  };
   useEffect(() => {
-    socket.on("receive_message", (data) => {
-      setMessageReceived([...messageReceived, data.message]);
-    });
-
     const handleImage = async (src) => {
       const newImage = { src, id: uuidv4() }; // Create new image object with ID
       setImages((images) => [...images, newImage]); // Update state with new image data
@@ -57,6 +46,7 @@ function App() {
     if (!files.length) return;
 
     for (const file of files) {
+      console.log(e.target.result)
       const reader = new FileReader();
       reader.onload = (e) => {
         socket.emit("submitImg", e.target.result);
@@ -74,14 +64,13 @@ function App() {
       await downloadImage(src, filename);
     }
   };
-
   const downloadImage = async (src, filename) => {
     const response = await fetch(src);
     const blob = await response.blob();
-
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = filename;
+    link.download = blob;
+    console.log(user)
     link.click();
   };
 
