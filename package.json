@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "firebase-tools-extra": "^1.0.0"
+  }
+}
