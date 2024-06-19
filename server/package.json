@@ -3,6 +3,7 @@
     "cors": "^2.8.5",
     "dataurl-to-blob": "^0.0.1",
     "express": "^4.19.2",
+    "firebase": "^10.12.2",
     "http": "^0.0.1-security",
     "nodemon": "^3.1.3",
     "socket.io": "^4.7.5"
