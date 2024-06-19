@@ -27,5 +27,32 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
     "vite": "^5.2.13"
+  },
+  "resolutions": {
+    "uuid": "3.4.0",
+    "form-data": "4.0.0",
+    "magicli": "0.0.8",
+    "rimraf": "2.7.1",
+    "find-up": "2.1.0",
+    "inspect-parameters-declaration": "0.0.9",
+    "strip-ansi": "4.0.0",
+    "array-back": "2.0.0",
+    "split-skip": "0.0.2",
+    "inspect-function": "0.3.4",
+    "ansi-regex": "3.0.1",
+    "locate-path": "2.0.0",
+    "p-locate": "2.0.0",
+    "path-exists": "3.0.0",
+    "p-limit": "1.3.0",
+    "extsprintf": "1.3.0",
+    "chalk": "2.4.2",
+    "ansi-styles": "3.2.1",
+    "escape-string-regexp": "1.0.5",
+    "supports-color": "5.5.0",
+    "color-convert": "1.9.3",
+    "color-name": "1.1.3",
+    "has-flag": "3.0.0",
+    "globals": "11.12.0",
+    "doctrine": "3.0.0"
   }
 }
