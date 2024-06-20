@@ -5,14 +5,17 @@ const { Server } = require('socket.io')
 const cors = require('cors')
 const fs = require('fs');
 const dataURLtoBlob = require('dataurl-to-blob');
-
+const path = require('path')
 app.use(cors())
+
+app.use(express.static(path.join(__dirname, '/client/dist')));
+
 const connectedUsers = {};
 const server = http.createServer(app)
 const io = new Server(server, { 
     maxHttpBufferSize: 1e8,
     cors: {
-        origin: "http://localhost:5173",
+        origin: ["http://localhost:5173","https://photoupload-58cf3.web.app"],
         methods: ['GET','POST']
     }
 })
@@ -32,6 +35,10 @@ io.on('connection',(socket)=>{
         console.log(connectedUsers)
     })
 })
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'dist','index.html')); // Serve index.html for all unmatched routes
+  });
+
 server.listen(3001, () => {
   console.log('Server is running');
 });

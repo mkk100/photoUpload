@@ -1,0 +1,17 @@
+{
+  "name": "mypackage",
+  "version": "0.1.0",
+  "scripts": {
+    "server" : "nodemon server/index.js",
+    "start": "node server/index.js",
+    "build": "npm install && npm install --prefix client && npm run build --prefix client"
+  },
+  "dependencies": {
+    "firebase": "^10.12.2"
+  },
+  "devDependencies": {
+    "webpack": "^5.92.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.0.4"
+  }
+}
