@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import io from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
 
-const socket = io.connect("https://photo-upload-api.vercel.app");
+const socket = io.connect("https://photo-upload-api.vercel.app/");
 export default function SharingPortal() {
   const [images, setImages] = useState([]);
   const [del, setDel] = useState(false);
