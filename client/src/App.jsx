@@ -3,7 +3,7 @@ import { useState } from "react";
 import io from "socket.io-client";
 import SharingPortal from "./SharingPortal";
 
-const socket = io.connect("http://localhost:3001");
+const socket = io.connect("https://photo-upload-api.vercel.app/");
 function App() {
   const [username, setUsername] = useState("");
   const [room, setRoom] = useState("");
