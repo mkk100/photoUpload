@@ -6,8 +6,10 @@ const cors = require('cors')
 const fs = require('fs');
 const dataURLtoBlob = require('dataurl-to-blob');
 const path = require('path')
-app.use(cors())
 
+require('dotenv').config();
+app.use(cors())
+const PORT = process.env.PORT;
 app.use(express.static(path.join(__dirname, '/client/dist')));
 
 const connectedUsers = {};
@@ -15,7 +17,7 @@ const server = http.createServer(app)
 const io = new Server(server, { 
     maxHttpBufferSize: 1e8,
     cors: {
-        origin: ["http://localhost:5173","https://photoupload-58cf3.web.app"],
+        origin: ['http://localhost:5173','https://photo-upload-smoky.vercel.app/'],
         methods: ['GET','POST']
     }
 })
@@ -39,6 +41,6 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'client', 'dist','index.html')); // Serve index.html for all unmatched routes
   });
 
-server.listen(3001, () => {
+server.listen(PORT, () => {
   console.log('Server is running');
 });

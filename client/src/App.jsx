@@ -3,16 +3,15 @@ import { useState } from "react";
 import io from "socket.io-client";
 import SharingPortal from "./SharingPortal";
 
-const socket = io.connect("http://localhost:3001");
+const socket = io.connect(':3001');
 function App() {
   const [username, setUsername] = useState("");
   const [room, setRoom] = useState("");
   const [showChat, setShowChat] = useState(false);
-  
   const joinRoom = () => {
     if (username !== "" && room !== "") {
       socket.emit("join_room", room);
-      setShowChat(true);
+      setShowChat(true); 
     }
   };
   return (

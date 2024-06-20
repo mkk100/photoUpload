@@ -4,7 +4,8 @@ import { useEffect } from "react";
 import io from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
 
-const socket = io.connect("http://localhost:3001");
+const socket = io.connect(':3001');
+
 export default function SharingPortal() {
   const [images, setImages] = useState([]);
   const [del, setDel] = useState(false);
