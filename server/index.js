@@ -7,6 +7,9 @@ const fs = require('fs');
 const dataURLtoBlob = require('dataurl-to-blob');
 
 app.use(cors())
+app.get('/',(req,res)=>{
+    res.json('On live!')
+})
 const connectedUsers = {};
 const server = http.createServer(app)
 const io = new Server(server, { 
