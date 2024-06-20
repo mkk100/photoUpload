@@ -12,7 +12,7 @@ const server = http.createServer(app)
 const io = new Server(server, { 
     maxHttpBufferSize: 1e8,
     cors: {
-        origin: "http://localhost:5173",
+        origin: 'https://photo-upload-smoky.vercel.app/',
         methods: ['GET','POST']
     }
 })
