@@ -7,17 +7,18 @@ const fs = require('fs');
 const dataURLtoBlob = require('dataurl-to-blob');
 
 app.use(cors())
-app.get('/',(req,res)=>{
-    res.json('On live!')
-})
+
 const connectedUsers = {};
 const server = http.createServer(app)
 const io = new Server(server, { 
     maxHttpBufferSize: 1e8,
     cors: {
-        origin: 'https://photo-upload-smoky.vercel.app/',
+        origin: 'https://photo-upload-smoky.vercel.app',
         methods: ['GET','POST']
     }
+})
+app.get('/',(req,res)=>{
+    res.json('On live!')
 })
 io.on('connection',(socket)=>{
     socket.on('submitImg', (data)=>{
