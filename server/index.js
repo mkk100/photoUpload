@@ -13,7 +13,7 @@ const server = http.createServer(app)
 const io = new Server(server, { 
     maxHttpBufferSize: 1e8,
     cors: {
-        origin: '',
+        origin: 'https://photo-upload-mernclient.vercel.app/',
         methods: ['GET','POST']
     }
 })
